@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-function TransactionForm({ onAddTransaction }) {
+function TransactionForm({
+  onAddTransaction,
+  editingTransaction,
+  onUpdateTransaction
+}) {
 
   const [type, setType] = useState("expense");
   const [amount, setAmount] = useState("");
@@ -8,29 +12,54 @@ function TransactionForm({ onAddTransaction }) {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
 
+  // Load existing transaction when editing
+  useEffect(() => {
+    if (editingTransaction) {
+      setType(editingTransaction.type);
+      setAmount(editingTransaction.amount);
+      setCategory(editingTransaction.category);
+      setDescription(editingTransaction.description);
+      setDate(editingTransaction.date);
+    }
+  }, [editingTransaction]);
+
   const handleSubmit = (event) => {
-  event.preventDefault();
+    event.preventDefault();
 
-  const newTransaction = {
-    id: Date.now(),
-    type,
-    amount: Number(amount),
-    category,
-    description,
-    date
+    const transactionData = {
+      id: editingTransaction
+        ? editingTransaction.id
+        : Date.now(),
+
+      type,
+      amount: Number(amount),
+      category,
+      description,
+      date
+    };
+
+    if (editingTransaction) {
+      onUpdateTransaction(transactionData);
+    } else {
+      onAddTransaction(transactionData);
+    }
+
+    // Reset form
+    setType("expense");
+    setAmount("");
+    setCategory("Food");
+    setDescription("");
+    setDate("");
   };
-
-  onAddTransaction(newTransaction);
-
-  setAmount("");
-  setDescription("");
-  setDate("");
-};
 
   return (
     <div className="transaction-form">
 
-      <h2>Add Transaction</h2>
+      <h2>
+        {editingTransaction
+          ? "Edit Transaction"
+          : "Add Transaction"}
+      </h2>
 
       <form onSubmit={handleSubmit}>
 
@@ -95,8 +124,11 @@ function TransactionForm({ onAddTransaction }) {
         />
 
 
+        {/* Submit Button */}
         <button type="submit">
-          Add Transaction
+          {editingTransaction
+            ? "Update Transaction"
+            : "Add Transaction"}
         </button>
 
       </form>

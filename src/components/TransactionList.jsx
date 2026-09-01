@@ -1,4 +1,8 @@
-function TransactionList({ transactions, onDeleteTransaction }) {
+function TransactionList({
+  transactions,
+  onDeleteTransaction,
+  onEditTransaction
+}) {
 
   return (
     <div className="transaction-list">
@@ -39,6 +43,14 @@ function TransactionList({ transactions, onDeleteTransaction }) {
                 </td>
 
                 <td>
+
+                    <button
+                        className="edit-button"
+                        onClick={() => onEditTransaction(transaction)}
+                        >
+                        ✏️
+                    </button>
+                    
                     <button
                     className="delete-button"
                     onClick={() => onDeleteTransaction(transaction.id)}
