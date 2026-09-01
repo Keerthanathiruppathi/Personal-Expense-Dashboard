@@ -150,3 +150,34 @@ body {
 .edit-button:hover {
   transform: scale(1.15);
 }
+
+.filters {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filters input {
+  flex: 1;
+  min-width: 250px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.filters select {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+}
+
+.no-transactions {
+  text-align: center;
+  padding: 30px;
+  color: #777;
+}
