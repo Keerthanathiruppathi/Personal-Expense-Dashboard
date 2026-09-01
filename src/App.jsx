@@ -1,14 +1,26 @@
+import { useState } from "react";
+import TransactionForm from "./components/TransactionForm";
+import TransactionList from "./components/TransactionList";
+
 function App() {
+
+  const [transactions, setTransactions] = useState([]);
+
+  const addTransaction = (transaction) => {
+    setTransactions((previousTransactions) => [
+      ...previousTransactions,
+      transaction
+    ]);
+  };
+
   return (
     <div className="app">
 
-      {/* Header */}
       <header className="header">
         <h1>Personal Expense Dashboard</h1>
         <p>Manage your finances in one place</p>
       </header>
 
-      {/* Summary Cards */}
       <section className="summary">
 
         <div className="card">
@@ -28,10 +40,13 @@ function App() {
 
         <div className="card">
           <h3>Transactions</h3>
-          <p>24</p>
+          <p>{transactions.length}</p>
         </div>
 
       </section>
+
+      <TransactionForm onAddTransaction={addTransaction} />
+      <TransactionList transactions={transactions} />
 
     </div>
   );

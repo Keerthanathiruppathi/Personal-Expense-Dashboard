@@ -1,3 +1,49 @@
+.transaction-form {
+  background: white;
+  padding: 30px;
+  margin-top: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  max-width: 700px;
+}
+
+.transaction-form h2 {
+  margin-bottom: 20px;
+}
+
+.transaction-form form {
+  display: grid;
+  gap: 10px;
+}
+
+.transaction-form label {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.transaction-form input,
+.transaction-form select {
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.transaction-form button {
+  margin-top: 15px;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.transaction-form button:hover {
+  opacity: 0.9;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -50,4 +96,33 @@ body {
 .card p {
   font-size: 28px;
   font-weight: bold;
+}
+
+.transaction-list {
+  background: white;
+  padding: 30px;
+  margin-top: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  overflow-x: auto;
+}
+
+.transaction-list h2 {
+  margin-bottom: 20px;
+}
+
+.transaction-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.transaction-list th,
+.transaction-list td {
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.transaction-list th {
+  background: #f9fafb;
 }
