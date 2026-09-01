@@ -126,3 +126,15 @@ body {
 .transaction-list th {
   background: #f9fafb;
 }
+
+.delete-button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 5px;
+}
+
+.delete-button:hover {
+  transform: scale(1.15);
+}

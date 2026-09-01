@@ -13,6 +13,24 @@ function App() {
     ]);
   };
 
+  const deleteTransaction = (id) => {
+    setTransactions((previousTransactions) =>
+      previousTransactions.filter(
+        (transaction) => transaction.id !== id
+    )
+  );
+};
+
+  const totalIncome = transactions
+  .filter((transaction) => transaction.type === "income")
+  .reduce((total, transaction) => total + transaction.amount, 0);
+
+  const totalExpenses = transactions
+  .filter((transaction) => transaction.type === "expense")
+  .reduce((total, transaction) => total + transaction.amount, 0);
+
+  const balance = totalIncome - totalExpenses;
+
   return (
     <div className="app">
 
@@ -25,17 +43,17 @@ function App() {
 
         <div className="card">
           <h3>Total Balance</h3>
-          <p>₹25,500</p>
+          <p>₹{balance.toLocaleString("en-IN")}</p>
         </div>
 
         <div className="card">
           <h3>Total Income</h3>
-          <p>₹40,000</p>
+          <p>₹{totalIncome.toLocaleString("en-IN")}</p>
         </div>
 
         <div className="card">
           <h3>Total Expenses</h3>
-          <p>₹14,500</p>
+          <p>₹{totalExpenses.toLocaleString("en-IN")}</p>
         </div>
 
         <div className="card">
@@ -44,9 +62,11 @@ function App() {
         </div>
 
       </section>
-
       <TransactionForm onAddTransaction={addTransaction} />
-      <TransactionList transactions={transactions} />
+      <TransactionList
+  transactions={transactions}
+  onDeleteTransaction={deleteTransaction}
+/>
 
     </div>
   );

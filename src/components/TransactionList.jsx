@@ -1,4 +1,4 @@
-function TransactionList({ transactions }) {
+function TransactionList({ transactions, onDeleteTransaction }) {
 
   return (
     <div className="transaction-list">
@@ -11,14 +11,15 @@ function TransactionList({ transactions }) {
         <table>
 
           <thead>
-            <tr>
-              <th>Date</th>
-              <th>Description</th>
-              <th>Category</th>
-              <th>Type</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                </tr>
+        </thead>
 
           <tbody>
 
@@ -34,10 +35,19 @@ function TransactionList({ transactions }) {
                 <td>{transaction.type}</td>
 
                 <td>
-                  ₹{transaction.amount}
+                    ₹{transaction.amount.toLocaleString("en-IN")}
                 </td>
 
-              </tr>
+                <td>
+                    <button
+                    className="delete-button"
+                    onClick={() => onDeleteTransaction(transaction.id)}
+                    >
+                    🗑️
+                    </button>
+                </td>
+
+            </tr>
             ))}
 
           </tbody>
