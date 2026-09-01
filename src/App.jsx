@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import TransactionForm from "./components/TransactionForm";
 import TransactionList from "./components/TransactionList";
+import Charts from "./components/Charts";
 
 function App() {
 
@@ -126,6 +127,8 @@ function App() {
         onDeleteTransaction={deleteTransaction}
         onEditTransaction={editTransaction}
       />
+
+      <Charts transactions={transactions} />
 
     </div>
   );
