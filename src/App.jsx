@@ -3,6 +3,7 @@ import TransactionForm from "./components/TransactionForm";
 import TransactionList from "./components/TransactionList";
 import Charts from "./components/Charts";
 import Toast from "./components/Toast";
+import BudgetCard from "./components/BudgetCard";
 import { exportToCSV } from "./utils/exportCSV";
 
 function App() {
@@ -29,6 +30,9 @@ function App() {
   });
 
   const [toast, setToast] = useState(null);
+
+  const [monthlyBudget, setMonthlyBudget] =
+    useState(0);
 
   useEffect(() => {
     localStorage.setItem(
@@ -63,6 +67,42 @@ function App() {
     };
   }, [toast]);
 
+  useEffect(() => {
+    const storageKey =
+      selectedMonth === "all"
+        ? "monthlyBudget-all"
+        : `monthlyBudget-${selectedMonth}`;
+
+    const savedBudget =
+      localStorage.getItem(
+        storageKey
+      );
+
+    setMonthlyBudget(
+      savedBudget
+        ? Number(savedBudget)
+        : 0
+    );
+  }, [selectedMonth]);
+
+  useEffect(() => {
+    const handleToastEvent = (event) => {
+      setToast(event.detail);
+    };
+
+    window.addEventListener(
+      "expense-dashboard-toast",
+      handleToastEvent
+    );
+
+    return () => {
+      window.removeEventListener(
+        "expense-dashboard-toast",
+        handleToastEvent
+      );
+    };
+  }, []);
+
   const showToast = (
     type,
     icon,
@@ -81,29 +121,13 @@ function App() {
     setToast(null);
   };
 
-  useEffect(() => {
-  const handleToastEvent = (event) => {
-    setToast(event.detail);
-  };
-
-  window.addEventListener(
-    "expense-dashboard-toast",
-    handleToastEvent
-  );
-
-  return () => {
-    window.removeEventListener(
-      "expense-dashboard-toast",
-      handleToastEvent
-    );
-  };
-}, []);
-
   const addTransaction = (transaction) => {
-    setTransactions((previousTransactions) => [
-      ...previousTransactions,
-      transaction
-    ]);
+    setTransactions(
+      (previousTransactions) => [
+        ...previousTransactions,
+        transaction
+      ]
+    );
 
     showToast(
       "success",
@@ -114,11 +138,12 @@ function App() {
   };
 
   const deleteTransaction = (id) => {
-    setTransactions((previousTransactions) =>
-      previousTransactions.filter(
-        (transaction) =>
-          transaction.id !== id
-      )
+    setTransactions(
+      (previousTransactions) =>
+        previousTransactions.filter(
+          (transaction) =>
+            transaction.id !== id
+        )
     );
 
     showToast(
@@ -129,8 +154,12 @@ function App() {
     );
   };
 
-  const editTransaction = (transaction) => {
-    setEditingTransaction(transaction);
+  const editTransaction = (
+    transaction
+  ) => {
+    setEditingTransaction(
+      transaction
+    );
 
     window.scrollTo({
       top: 0,
@@ -152,7 +181,9 @@ function App() {
         )
     );
 
-    setEditingTransaction(null);
+    setEditingTransaction(
+      null
+    );
 
     showToast(
       "info",
@@ -163,7 +194,9 @@ function App() {
   };
 
   const cancelEdit = () => {
-    setEditingTransaction(null);
+    setEditingTransaction(
+      null
+    );
 
     showToast(
       "info",
@@ -174,20 +207,29 @@ function App() {
   };
 
   const availableMonths = useMemo(() => {
-    const months = transactions
-      .map(
-        (transaction) =>
-          transaction.date?.slice(0, 7)
-      )
-      .filter(Boolean);
+    const months =
+      transactions
+        .map(
+          (transaction) =>
+            transaction.date?.slice(
+              0,
+              7
+            )
+        )
+        .filter(Boolean);
 
     return [
       ...new Set(months)
     ].sort().reverse();
   }, [transactions]);
 
-  const formatMonth = (monthValue) => {
-    const [year, month] =
+  const formatMonth = (
+    monthValue
+  ) => {
+    const [
+      year,
+      month
+    ] =
       monthValue.split("-");
 
     const date = new Date(
@@ -218,12 +260,15 @@ function App() {
     filteredTransactions
       .filter(
         (transaction) =>
-          transaction.type === "income"
+          transaction.type ===
+          "income"
       )
       .reduce(
         (total, transaction) =>
           total +
-          Number(transaction.amount),
+          Number(
+            transaction.amount
+          ),
         0
       );
 
@@ -231,42 +276,52 @@ function App() {
     filteredTransactions
       .filter(
         (transaction) =>
-          transaction.type === "expense"
+          transaction.type ===
+          "expense"
       )
       .reduce(
         (total, transaction) =>
           total +
-          Number(transaction.amount),
+          Number(
+            transaction.amount
+          ),
         0
       );
 
   const balance =
-    totalIncome - totalExpenses;
+    totalIncome -
+    totalExpenses;
 
   const expenseTransactions =
     filteredTransactions.filter(
       (transaction) =>
-        transaction.type === "expense"
+        transaction.type ===
+        "expense"
     );
 
   const incomeTransactions =
     filteredTransactions.filter(
       (transaction) =>
-        transaction.type === "income"
+        transaction.type ===
+        "income"
     );
 
   const averageExpense =
-    expenseTransactions.length > 0
+    expenseTransactions.length >
+    0
       ? totalExpenses /
         expenseTransactions.length
       : 0;
 
   const highestExpense =
-    expenseTransactions.length > 0
+    expenseTransactions.length >
+    0
       ? Math.max(
           ...expenseTransactions.map(
             (transaction) =>
-              Number(transaction.amount)
+              Number(
+                transaction.amount
+              )
           )
         )
       : 0;
@@ -279,13 +334,21 @@ function App() {
         transaction.category ||
         "Other";
 
-      categoryTotals[category] =
-        (categoryTotals[category] || 0) +
-        Number(transaction.amount);
+      categoryTotals[
+        category
+      ] =
+        (categoryTotals[
+          category
+        ] || 0) +
+        Number(
+          transaction.amount
+        );
     }
   );
 
-  let topCategory = "No data";
+  let topCategory =
+    "No data";
+
   let topCategoryAmount = 0;
 
   Object.entries(
@@ -296,21 +359,38 @@ function App() {
         amount >
         topCategoryAmount
       ) {
-        topCategory = category;
-        topCategoryAmount = amount;
+        topCategory =
+          category;
+
+        topCategoryAmount =
+          amount;
       }
     }
   );
 
   const savingsRate =
     totalIncome > 0
-      ? (balance / totalIncome) * 100
+      ? (balance /
+          totalIncome) *
+        100
+      : 0;
+
+  const budgetRemaining =
+    monthlyBudget -
+    totalExpenses;
+
+  const budgetPercentage =
+    monthlyBudget > 0
+      ? (totalExpenses /
+          monthlyBudget) *
+        100
       : 0;
 
   const smartInsights = [];
 
   if (
-    filteredTransactions.length === 0
+    filteredTransactions.length ===
+    0
   ) {
     smartInsights.push({
       type: "info",
@@ -322,7 +402,8 @@ function App() {
   }
 
   if (
-    filteredTransactions.length > 0 &&
+    filteredTransactions.length >
+      0 &&
     totalExpenses === 0
   ) {
     smartInsights.push({
@@ -335,7 +416,8 @@ function App() {
   }
 
   if (
-    totalExpenses > totalIncome &&
+    totalExpenses >
+      totalIncome &&
     totalExpenses > 0
   ) {
     smartInsights.push({
@@ -349,7 +431,8 @@ function App() {
 
   if (
     totalIncome > 0 &&
-    totalExpenses === totalIncome
+    totalExpenses ===
+      totalIncome
   ) {
     smartInsights.push({
       type: "warning",
@@ -392,7 +475,8 @@ function App() {
   }
 
   if (
-    topCategory !== "No data" &&
+    topCategory !==
+      "No data" &&
     topCategoryAmount > 0
   ) {
     smartInsights.push({
@@ -405,6 +489,56 @@ function App() {
         )} spent.`
     });
   }
+
+  if (
+    monthlyBudget > 0 &&
+    budgetPercentage >= 100
+  ) {
+    smartInsights.push({
+      type: "warning",
+      icon: "🚨",
+      title: "Budget Exceeded",
+      message:
+        `You have exceeded your budget by ₹${Math.abs(
+          budgetRemaining
+        ).toLocaleString(
+          "en-IN"
+        )}.`
+    });
+  }
+
+  if (
+    monthlyBudget > 0 &&
+    budgetPercentage >= 80 &&
+    budgetPercentage < 100
+  ) {
+    smartInsights.push({
+      type: "info",
+      icon: "⚠️",
+      title: "Budget Almost Reached",
+      message:
+        `You have used ${budgetPercentage.toFixed(
+          1
+        )}% of your budget.`
+    });
+  }
+
+  const handleBudgetChange = (
+    value
+  ) => {
+    setMonthlyBudget(
+      Number(value) || 0
+    );
+
+    if (Number(value) > 0) {
+      showToast(
+        "success",
+        "💰",
+        "Budget Updated",
+        "Your monthly budget has been saved."
+      );
+    }
+  };
 
   const handleExportCSV = () => {
     const exported =
@@ -433,12 +567,16 @@ function App() {
   return (
     <div
       className={`app ${
-        darkMode ? "dark-theme" : ""
+        darkMode
+          ? "dark-theme"
+          : ""
       }`}
     >
       <Toast
         toast={toast}
-        onClose={closeToast}
+        onClose={
+          closeToast
+        }
       />
 
       <header className="header">
@@ -476,8 +614,12 @@ function App() {
 
           <select
             id="month"
-            value={selectedMonth}
-            onChange={(event) =>
+            value={
+              selectedMonth
+            }
+            onChange={(
+              event
+            ) =>
               setSelectedMonth(
                 event.target.value
               )
@@ -493,7 +635,9 @@ function App() {
                   key={month}
                   value={month}
                 >
-                  {formatMonth(month)}
+                  {formatMonth(
+                    month
+                  )}
                 </option>
               )
             )}
@@ -502,7 +646,9 @@ function App() {
 
         <button
           className="export-button"
-          onClick={handleExportCSV}
+          onClick={
+            handleExportCSV
+          }
         >
           📥 Export CSV
         </button>
@@ -510,10 +656,14 @@ function App() {
 
       <section className="summary">
         <div className="card balance-card">
-          <div className="card-icon">💰</div>
+          <div className="card-icon">
+            💰
+          </div>
 
           <div className="card-content">
-            <h3>Total Balance</h3>
+            <h3>
+              Total Balance
+            </h3>
 
             <p
               className={
@@ -537,10 +687,14 @@ function App() {
         </div>
 
         <div className="card income-card">
-          <div className="card-icon">📈</div>
+          <div className="card-icon">
+            📈
+          </div>
 
           <div className="card-content">
-            <h3>Total Income</h3>
+            <h3>
+              Total Income
+            </h3>
 
             <p className="positive">
               ₹
@@ -549,15 +703,21 @@ function App() {
               )}
             </p>
 
-            <span>Money received</span>
+            <span>
+              Money received
+            </span>
           </div>
         </div>
 
         <div className="card expense-card">
-          <div className="card-icon">📉</div>
+          <div className="card-icon">
+            📉
+          </div>
 
           <div className="card-content">
-            <h3>Total Expenses</h3>
+            <h3>
+              Total Expenses
+            </h3>
 
             <p className="negative">
               ₹
@@ -566,28 +726,52 @@ function App() {
               )}
             </p>
 
-            <span>Money spent</span>
+            <span>
+              Money spent
+            </span>
           </div>
         </div>
 
         <div className="card transaction-card">
-          <div className="card-icon">🧾</div>
+          <div className="card-icon">
+            🧾
+          </div>
 
           <div className="card-content">
-            <h3>Transactions</h3>
+            <h3>
+              Transactions
+            </h3>
 
             <p>
-              {filteredTransactions.length}
+              {
+                filteredTransactions.length
+              }
             </p>
 
-            <span>Total records</span>
+            <span>
+              Total records
+            </span>
           </div>
         </div>
       </section>
 
+      <BudgetCard
+        selectedMonth={
+          selectedMonth
+        }
+        totalExpenses={
+          totalExpenses
+        }
+        onBudgetChange={
+          handleBudgetChange
+        }
+      />
+
       <section className="analytics-section">
         <div className="analytics-header">
-          <h2>📊 Financial Analytics</h2>
+          <h2>
+            📊 Financial Analytics
+          </h2>
 
           <p>
             Get insights into your spending habits
@@ -596,10 +780,14 @@ function App() {
 
         <div className="analytics-grid">
           <div className="analytics-card">
-            <div className="analytics-icon">💵</div>
+            <div className="analytics-icon">
+              💵
+            </div>
 
             <div>
-              <h3>Average Expense</h3>
+              <h3>
+                Average Expense
+              </h3>
 
               <p>
                 ₹
@@ -618,10 +806,14 @@ function App() {
           </div>
 
           <div className="analytics-card">
-            <div className="analytics-icon">🔥</div>
+            <div className="analytics-icon">
+              🔥
+            </div>
 
             <div>
-              <h3>Highest Expense</h3>
+              <h3>
+                Highest Expense
+              </h3>
 
               <p>
                 ₹
@@ -637,12 +829,18 @@ function App() {
           </div>
 
           <div className="analytics-card">
-            <div className="analytics-icon">🏆</div>
+            <div className="analytics-icon">
+              🏆
+            </div>
 
             <div>
-              <h3>Top Category</h3>
+              <h3>
+                Top Category
+              </h3>
 
-              <p>{topCategory}</p>
+              <p>
+                {topCategory}
+              </p>
 
               <span>
                 ₹
@@ -655,13 +853,20 @@ function App() {
           </div>
 
           <div className="analytics-card">
-            <div className="analytics-icon">💚</div>
+            <div className="analytics-icon">
+              💚
+            </div>
 
             <div>
-              <h3>Savings Rate</h3>
+              <h3>
+                Savings Rate
+              </h3>
 
               <p>
-                {savingsRate.toFixed(1)}%
+                {savingsRate.toFixed(
+                  1
+                )}
+                %
               </p>
 
               <span>
@@ -671,13 +876,19 @@ function App() {
           </div>
 
           <div className="analytics-card">
-            <div className="analytics-icon">📈</div>
+            <div className="analytics-icon">
+              📈
+            </div>
 
             <div>
-              <h3>Income Transactions</h3>
+              <h3>
+                Income Transactions
+              </h3>
 
               <p>
-                {incomeTransactions.length}
+                {
+                  incomeTransactions.length
+                }
               </p>
 
               <span>
@@ -687,13 +898,19 @@ function App() {
           </div>
 
           <div className="analytics-card">
-            <div className="analytics-icon">📉</div>
+            <div className="analytics-icon">
+              📉
+            </div>
 
             <div>
-              <h3>Expense Transactions</h3>
+              <h3>
+                Expense Transactions
+              </h3>
 
               <p>
-                {expenseTransactions.length}
+                {
+                  expenseTransactions.length
+                }
               </p>
 
               <span>
@@ -706,7 +923,9 @@ function App() {
 
       <section className="insights-section">
         <div className="insights-header">
-          <h2>🧠 Smart Spending Insights</h2>
+          <h2>
+            🧠 Smart Spending Insights
+          </h2>
 
           <p>
             Personalized insights based on your financial activity
@@ -715,22 +934,31 @@ function App() {
 
         <div className="insights-grid">
           {smartInsights.map(
-            (insight, index) => (
+            (
+              insight,
+              index
+            ) => (
               <div
                 className={`insight-card ${insight.type}`}
                 key={index}
               >
                 <div className="insight-icon">
-                  {insight.icon}
+                  {
+                    insight.icon
+                  }
                 </div>
 
                 <div className="insight-content">
                   <h3>
-                    {insight.title}
+                    {
+                      insight.title
+                    }
                   </h3>
 
                   <p>
-                    {insight.message}
+                    {
+                      insight.message
+                    }
                   </p>
                 </div>
               </div>
@@ -740,14 +968,18 @@ function App() {
       </section>
 
       <TransactionForm
-        onAddTransaction={addTransaction}
+        onAddTransaction={
+          addTransaction
+        }
         editingTransaction={
           editingTransaction
         }
         onUpdateTransaction={
           updateTransaction
         }
-        onCancelEdit={cancelEdit}
+        onCancelEdit={
+          cancelEdit
+        }
       />
 
       <TransactionList
