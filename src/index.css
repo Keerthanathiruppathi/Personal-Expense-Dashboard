@@ -183,6 +183,9 @@ body {
 }
 
 .charts-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
   margin-top: 30px;
   margin-bottom: 30px;
 }
@@ -196,4 +199,24 @@ body {
 
 .chart-card h2 {
   margin-bottom: 20px;
+}
+
+.no-chart-data {
+  text-align: center;
+  padding: 100px 20px;
+  color: #777;
+}
+
+/* Responsive layout */
+
+@media (max-width: 768px) {
+
+  .charts-section {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+.expense-trend-card {
+  grid-column: 1 / -1;
 }
