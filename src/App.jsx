@@ -5,6 +5,7 @@ import Charts from "./components/Charts";
 import Toast from "./components/Toast";
 import BudgetCard from "./components/BudgetCard";
 import { exportToCSV } from "./utils/exportCSV";
+import { exportToPDF } from "./utils/exportPDF";
 
 function App() {
   const [transactions, setTransactions] = useState(() => {
@@ -74,9 +75,7 @@ function App() {
         : `monthlyBudget-${selectedMonth}`;
 
     const savedBudget =
-      localStorage.getItem(
-        storageKey
-      );
+      localStorage.getItem(storageKey);
 
     setMonthlyBudget(
       savedBudget
@@ -564,6 +563,42 @@ function App() {
     }
   };
 
+  const handleExportPDF = () => {
+    const exported =
+      exportToPDF({
+        transactions:
+          filteredTransactions,
+        selectedMonth,
+        totalIncome,
+        totalExpenses,
+        balance,
+        savingsRate,
+        monthlyBudget,
+        budgetRemaining,
+        budgetPercentage,
+        topCategory,
+        topCategoryAmount,
+        averageExpense,
+        highestExpense
+      });
+
+    if (exported) {
+      showToast(
+        "success",
+        "📄",
+        "PDF Generated",
+        "Your financial report was generated successfully."
+      );
+    } else {
+      showToast(
+        "warning",
+        "⚠️",
+        "Nothing to Export",
+        "There are no transactions available for the PDF report."
+      );
+    }
+  };
+
   return (
     <div
       className={`app ${
@@ -598,7 +633,6 @@ function App() {
                 !previousMode
             )
           }
-          aria-label="Toggle dark mode"
         >
           {darkMode
             ? "☀️ Light Mode"
@@ -644,14 +678,25 @@ function App() {
           </select>
         </div>
 
-        <button
-          className="export-button"
-          onClick={
-            handleExportCSV
-          }
-        >
-          📥 Export CSV
-        </button>
+        <div className="export-buttons">
+          <button
+            className="export-button"
+            onClick={
+              handleExportCSV
+            }
+          >
+            📥 Export CSV
+          </button>
+
+          <button
+            className="pdf-button"
+            onClick={
+              handleExportPDF
+            }
+          >
+            📄 Generate PDF
+          </button>
+        </div>
       </div>
 
       <section className="summary">

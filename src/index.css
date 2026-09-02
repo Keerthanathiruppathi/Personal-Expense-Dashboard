@@ -1582,3 +1582,54 @@ body.dark-mode .budget-progress-header {
     height: 11px;
   }
 }
+
+/* ================================
+   EXPORT BUTTONS
+================================ */
+
+.export-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pdf-button {
+  border: none;
+  border-radius: 10px;
+
+  padding: 11px 17px;
+
+  background: #7c3aed;
+  color: white;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.pdf-button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 6px 15px rgba(124, 58, 237, 0.25);
+}
+
+body.dark-mode .pdf-button {
+  background: #8b5cf6;
+}
+
+@media (max-width: 600px) {
+  .export-buttons {
+    width: 100%;
+  }
+
+  .export-buttons button {
+    flex: 1;
+  }
+}
