@@ -39,9 +39,12 @@ body {
   );
 
   color: white;
+
   padding: 35px;
+
   border-radius: 18px;
-  margin-bottom: 30px;
+
+  margin-bottom: 25px;
 
   box-shadow:
     0 10px 30px rgba(37, 99, 235, 0.2);
@@ -55,6 +58,63 @@ body {
 .header p {
   font-size: 16px;
   opacity: 0.9;
+}
+
+
+/* ============================= */
+/* Month Filter */
+/* ============================= */
+
+.month-filter {
+  background: white;
+
+  padding: 18px 22px;
+
+  border-radius: 14px;
+
+  margin-bottom: 25px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  box-shadow:
+    0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.month-filter label {
+  font-weight: 600;
+
+  color: #374151;
+}
+
+.month-filter select {
+  padding: 11px 15px;
+
+  min-width: 200px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 8px;
+
+  background: white;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  outline: none;
+}
+
+.month-filter select:focus {
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 
@@ -95,20 +155,195 @@ body {
     0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-.card h3 {
+.summary .card {
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+.card-icon {
+  width: 55px;
+  height: 55px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 14px;
+
+  font-size: 25px;
+
+  flex-shrink: 0;
+}
+
+.card-content {
+  min-width: 0;
+}
+
+.card-content h3 {
   font-size: 15px;
 
   color: #6b7280;
 
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
-.card p {
+.card-content p {
   font-size: 28px;
 
   font-weight: bold;
 
+  margin-bottom: 5px;
+}
+
+.card-content span {
+  font-size: 12px;
+
+  color: #9ca3af;
+}
+
+.balance-card .card-icon {
+  background: #dbeafe;
+}
+
+.income-card .card-icon {
+  background: #dcfce7;
+}
+
+.expense-card .card-icon {
+  background: #fee2e2;
+}
+
+.transaction-card .card-icon {
+  background: #fef3c7;
+}
+
+.positive {
+  color: #16a34a !important;
+}
+
+.negative {
+  color: #dc2626 !important;
+}
+
+
+/* ============================= */
+/* Advanced Analytics */
+/* ============================= */
+
+.analytics-section {
+  background: white;
+
+  padding: 30px;
+
+  border-radius: 16px;
+
+  margin-bottom: 30px;
+
+  box-shadow:
+    0 5px 20px rgba(0, 0, 0, 0.06);
+}
+
+.analytics-header {
+  margin-bottom: 25px;
+}
+
+.analytics-header h2 {
+  font-size: 22px;
+
+  margin-bottom: 6px;
+}
+
+.analytics-header p {
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+.analytics-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 18px;
+}
+
+.analytics-card {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 20px;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.analytics-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.analytics-icon {
+  width: 48px;
+
+  height: 48px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: #f3f4f6;
+
+  border-radius: 12px;
+
+  font-size: 22px;
+
+  flex-shrink: 0;
+}
+
+.analytics-card h3 {
+  font-size: 13px;
+
+  color: #6b7280;
+
+  margin-bottom: 6px;
+}
+
+.analytics-card p {
+  font-size: 21px;
+
+  font-weight: bold;
+
   color: #111827;
+
+  margin-bottom: 4px;
+}
+
+.analytics-card span {
+  font-size: 11px;
+
+  color: #9ca3af;
 }
 
 
@@ -134,9 +369,6 @@ body {
 
   font-size: 22px;
 }
-
-
-/* Form */
 
 .transaction-form form {
   display: grid;
@@ -181,9 +413,6 @@ body {
   box-shadow:
     0 0 0 3px rgba(37, 99, 235, 0.1);
 }
-
-
-/* Submit Button */
 
 .transaction-form button {
   grid-column: 1 / -1;
@@ -236,11 +465,6 @@ body {
 .transaction-list h2 {
   margin-bottom: 20px;
 }
-
-
-/* ============================= */
-/* Filters */
-/* ============================= */
 
 .filters {
   display: flex;
@@ -326,7 +550,7 @@ body {
 
 
 /* ============================= */
-/* Edit / Delete Buttons */
+/* Buttons */
 /* ============================= */
 
 .edit-button,
@@ -426,15 +650,24 @@ body {
 
 
 /* ============================= */
-/* Mobile Responsive */
+/* Responsive */
 /* ============================= */
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
 
   .summary {
     grid-template-columns:
       repeat(2, 1fr);
   }
+
+  .analytics-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+}
+
+
+@media (max-width: 900px) {
 
   .charts-section {
     grid-template-columns: 1fr;
@@ -466,6 +699,14 @@ body {
     grid-template-columns: 1fr;
   }
 
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-section {
+    padding: 20px;
+  }
+
   .transaction-form form {
     grid-template-columns: 1fr;
   }
@@ -488,150 +729,6 @@ body {
   .filters select {
     width: 100%;
   }
-}
-
-/* ============================= */
-/* Enhanced Summary Cards */
-/* ============================= */
-
-.summary .card {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-
-  position: relative;
-  overflow: hidden;
-}
-
-.card-icon {
-  width: 55px;
-  height: 55px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 14px;
-
-  font-size: 25px;
-
-  flex-shrink: 0;
-}
-
-.card-content {
-  min-width: 0;
-}
-
-.card-content h3 {
-  margin-bottom: 6px;
-}
-
-.card-content p {
-  margin-bottom: 5px;
-}
-
-.card-content span {
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-
-/* Balance */
-
-.balance-card .card-icon {
-  background: #dbeafe;
-}
-
-
-/* Income */
-
-.income-card .card-icon {
-  background: #dcfce7;
-}
-
-
-/* Expense */
-
-.expense-card .card-icon {
-  background: #fee2e2;
-}
-
-
-/* Transactions */
-
-.transaction-card .card-icon {
-  background: #fef3c7;
-}
-
-
-/* Positive / Negative */
-
-.positive {
-  color: #16a34a !important;
-}
-
-.negative {
-  color: #dc2626 !important;
-}
-
-/* ============================= */
-/* Month Filter */
-/* ============================= */
-
-.month-filter {
-  background: white;
-
-  padding: 18px 22px;
-
-  border-radius: 14px;
-
-  margin-bottom: 25px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  gap: 20px;
-
-  box-shadow:
-    0 5px 20px rgba(0, 0, 0, 0.05);
-}
-
-.month-filter label {
-  font-weight: 600;
-
-  color: #374151;
-}
-
-.month-filter select {
-  padding: 11px 15px;
-
-  min-width: 200px;
-
-  border: 1px solid #d1d5db;
-
-  border-radius: 8px;
-
-  background: white;
-
-  font-size: 14px;
-
-  cursor: pointer;
-
-  outline: none;
-}
-
-.month-filter select:focus {
-  border-color: #2563eb;
-
-  box-shadow:
-    0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-
-@media (max-width: 600px) {
 
   .month-filter {
     flex-direction: column;
@@ -641,5 +738,105 @@ body {
 
   .month-filter select {
     width: 100%;
+  }
+}
+
+/* ============================= */
+/* Smart Spending Insights */
+/* ============================= */
+
+.insights-section {
+  margin-top: 30px;
+}
+
+.insights-header {
+  margin-bottom: 20px;
+}
+
+.insights-header h2 {
+  margin-bottom: 6px;
+  font-size: 24px;
+}
+
+.insights-header p {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.insight-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 14px;
+  background: white;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.insight-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.insight-icon {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #f5f5f5;
+  font-size: 24px;
+}
+
+.insight-content h3 {
+  margin: 0 0 7px;
+  font-size: 17px;
+}
+
+.insight-content p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Insight Types */
+
+.insight-card.warning {
+  border-left: 5px solid #f59e0b;
+}
+
+.insight-card.success {
+  border-left: 5px solid #22c55e;
+}
+
+.insight-card.info {
+  border-left: 5px solid #3b82f6;
+}
+
+.insight-card.category {
+  border-left: 5px solid #8b5cf6;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .insights-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .insight-card {
+    padding: 16px;
   }
 }
