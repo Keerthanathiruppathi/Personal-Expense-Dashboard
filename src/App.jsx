@@ -4,20 +4,37 @@ import TransactionList from "./components/TransactionList";
 import Charts from "./components/Charts";
 
 function App() {
+  // =============================
+  // Transactions
+  // =============================
 
-  // Store all transactions
   const [transactions, setTransactions] = useState(() => {
-    const savedTransactions = localStorage.getItem("transactions");
+    const savedTransactions =
+      localStorage.getItem("transactions");
 
     return savedTransactions
       ? JSON.parse(savedTransactions)
       : [];
   });
 
-  // Store the transaction currently being edited
-  const [editingTransaction, setEditingTransaction] = useState(null);
+  // =============================
+  // Editing Transaction
+  // =============================
 
-  // Save transactions to LocalStorage whenever transactions change
+  const [editingTransaction, setEditingTransaction] =
+    useState(null);
+
+  // =============================
+  // Selected Month
+  // =============================
+
+  const [selectedMonth, setSelectedMonth] =
+    useState("all");
+
+  // =============================
+  // Save Transactions
+  // =============================
+
   useEffect(() => {
     localStorage.setItem(
       "transactions",
@@ -25,7 +42,10 @@ function App() {
     );
   }, [transactions]);
 
-  // Add a new transaction
+  // =============================
+  // Add Transaction
+  // =============================
+
   const addTransaction = (transaction) => {
     setTransactions((previousTransactions) => [
       ...previousTransactions,
@@ -33,7 +53,10 @@ function App() {
     ]);
   };
 
-  // Delete a transaction
+  // =============================
+  // Delete Transaction
+  // =============================
+
   const deleteTransaction = (id) => {
     setTransactions((previousTransactions) =>
       previousTransactions.filter(
@@ -42,12 +65,18 @@ function App() {
     );
   };
 
-  // Select a transaction for editing
+  // =============================
+  // Edit Transaction
+  // =============================
+
   const editTransaction = (transaction) => {
     setEditingTransaction(transaction);
   };
 
-  // Update an existing transaction
+  // =============================
+  // Update Transaction
+  // =============================
+
   const updateTransaction = (updatedTransaction) => {
     setTransactions((previousTransactions) =>
       previousTransactions.map((transaction) =>
@@ -57,78 +86,308 @@ function App() {
       )
     );
 
-    // Exit edit mode
     setEditingTransaction(null);
   };
 
-  // Calculate total income
-  const totalIncome = transactions
-    .filter((transaction) => transaction.type === "income")
+  // =============================
+  // Filter Transactions by Month
+  // =============================
+
+  const filteredTransactions =
+    selectedMonth === "all"
+      ? transactions
+      : transactions.filter((transaction) =>
+          transaction.date.startsWith(selectedMonth)
+        );
+
+  // =============================
+  // Calculate Total Income
+  // =============================
+
+  const totalIncome = filteredTransactions
+    .filter(
+      (transaction) =>
+        transaction.type === "income"
+    )
     .reduce(
-      (total, transaction) => total + transaction.amount,
+      (total, transaction) =>
+        total + Number(transaction.amount),
       0
     );
 
-  // Calculate total expenses
-  const totalExpenses = transactions
-    .filter((transaction) => transaction.type === "expense")
+  // =============================
+  // Calculate Total Expenses
+  // =============================
+
+  const totalExpenses = filteredTransactions
+    .filter(
+      (transaction) =>
+        transaction.type === "expense"
+    )
     .reduce(
-      (total, transaction) => total + transaction.amount,
+      (total, transaction) =>
+        total + Number(transaction.amount),
       0
     );
 
-  // Calculate balance
+  // =============================
+  // Calculate Balance
+  // =============================
+
   const balance = totalIncome - totalExpenses;
+
+  // =============================
+  // UI
+  // =============================
 
   return (
     <div className="app">
 
+      {/* ========================= */}
       {/* Header */}
+      {/* ========================= */}
+
       <header className="header">
-        <h1>Personal Expense Dashboard</h1>
-        <p>Manage your finances in one place</p>
+
+        <h1>
+          Personal Expense Dashboard
+        </h1>
+
+        <p>
+          Manage your finances in one place
+        </p>
+
       </header>
 
+
+      {/* ========================= */}
+      {/* Month Filter */}
+      {/* ========================= */}
+
+      <div className="month-filter">
+
+        <label htmlFor="month">
+          📅 Select Month
+        </label>
+
+        <select
+          id="month"
+          value={selectedMonth}
+          onChange={(event) =>
+            setSelectedMonth(event.target.value)
+          }
+        >
+
+          <option value="all">
+            All Months
+          </option>
+
+          <option value="2026-01">
+            January 2026
+          </option>
+
+          <option value="2026-02">
+            February 2026
+          </option>
+
+          <option value="2026-03">
+            March 2026
+          </option>
+
+          <option value="2026-04">
+            April 2026
+          </option>
+
+          <option value="2026-05">
+            May 2026
+          </option>
+
+          <option value="2026-06">
+            June 2026
+          </option>
+
+          <option value="2026-07">
+            July 2026
+          </option>
+
+          <option value="2026-08">
+            August 2026
+          </option>
+
+          <option value="2026-09">
+            September 2026
+          </option>
+
+          <option value="2026-10">
+            October 2026
+          </option>
+
+          <option value="2026-11">
+            November 2026
+          </option>
+
+          <option value="2026-12">
+            December 2026
+          </option>
+
+        </select>
+
+      </div>
+
+
+      {/* ========================= */}
       {/* Summary Cards */}
+      {/* ========================= */}
+
       <section className="summary">
 
-        <div className="card">
-          <h3>Total Balance</h3>
-          <p>₹{balance.toLocaleString("en-IN")}</p>
+        {/* Balance */}
+
+        <div className="card balance-card">
+
+          <div className="card-icon">
+            💰
+          </div>
+
+          <div className="card-content">
+
+            <h3>
+              Total Balance
+            </h3>
+
+            <p
+              className={
+                balance >= 0
+                  ? "positive"
+                  : "negative"
+              }
+            >
+              ₹{balance.toLocaleString("en-IN")}
+            </p>
+
+            <span>
+              {balance >= 0
+                ? "Your balance is positive"
+                : "Your expenses are higher than income"}
+            </span>
+
+          </div>
+
         </div>
 
-        <div className="card">
-          <h3>Total Income</h3>
-          <p>₹{totalIncome.toLocaleString("en-IN")}</p>
+
+        {/* Income */}
+
+        <div className="card income-card">
+
+          <div className="card-icon">
+            📈
+          </div>
+
+          <div className="card-content">
+
+            <h3>
+              Total Income
+            </h3>
+
+            <p className="positive">
+              ₹{totalIncome.toLocaleString("en-IN")}
+            </p>
+
+            <span>
+              Money received
+            </span>
+
+          </div>
+
         </div>
 
-        <div className="card">
-          <h3>Total Expenses</h3>
-          <p>₹{totalExpenses.toLocaleString("en-IN")}</p>
+
+        {/* Expenses */}
+
+        <div className="card expense-card">
+
+          <div className="card-icon">
+            📉
+          </div>
+
+          <div className="card-content">
+
+            <h3>
+              Total Expenses
+            </h3>
+
+            <p className="negative">
+              ₹{totalExpenses.toLocaleString("en-IN")}
+            </p>
+
+            <span>
+              Money spent
+            </span>
+
+          </div>
+
         </div>
 
-        <div className="card">
-          <h3>Transactions</h3>
-          <p>{transactions.length}</p>
+
+        {/* Transactions */}
+
+        <div className="card transaction-card">
+
+          <div className="card-icon">
+            🧾
+          </div>
+
+          <div className="card-content">
+
+            <h3>
+              Transactions
+            </h3>
+
+            <p>
+              {filteredTransactions.length}
+            </p>
+
+            <span>
+              Total records
+            </span>
+
+          </div>
+
         </div>
 
       </section>
 
+
+      {/* ========================= */}
       {/* Transaction Form */}
+      {/* ========================= */}
+
       <TransactionForm
         onAddTransaction={addTransaction}
         editingTransaction={editingTransaction}
         onUpdateTransaction={updateTransaction}
       />
 
-      {/* Transaction History */}
+
+      {/* ========================= */}
+      {/* Transaction List */}
+      {/* ========================= */}
+
       <TransactionList
-        transactions={transactions}
+        transactions={filteredTransactions}
         onDeleteTransaction={deleteTransaction}
         onEditTransaction={editTransaction}
       />
 
-      <Charts transactions={transactions} />
+
+      {/* ========================= */}
+      {/* Charts */}
+      {/* ========================= */}
+
+      <Charts
+        transactions={filteredTransactions}
+      />
 
     </div>
   );
