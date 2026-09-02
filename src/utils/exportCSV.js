@@ -1,7 +1,12 @@
-export const exportToCSV = (transactions, selectedMonth) => {
-  if (!transactions || transactions.length === 0) {
-    alert("No transactions available to export.");
-    return;
+export const exportToCSV = (
+  transactions,
+  selectedMonth
+) => {
+  if (
+    !transactions ||
+    transactions.length === 0
+  ) {
+    return false;
   }
 
   const headers = [
@@ -12,13 +17,15 @@ export const exportToCSV = (transactions, selectedMonth) => {
     "Amount"
   ];
 
-  const rows = transactions.map((transaction) => [
-    transaction.date || "",
-    transaction.description || "",
-    transaction.category || "",
-    transaction.type || "",
-    transaction.amount || 0
-  ]);
+  const rows = transactions.map(
+    (transaction) => [
+      transaction.date || "",
+      transaction.description || "",
+      transaction.category || "",
+      transaction.type || "",
+      transaction.amount || 0
+    ]
+  );
 
   const csvContent = [
     headers,
@@ -26,8 +33,12 @@ export const exportToCSV = (transactions, selectedMonth) => {
   ]
     .map((row) =>
       row
-        .map((value) =>
-          `"${String(value).replace(/"/g, '""')}"`
+        .map(
+          (value) =>
+            `"${String(value).replace(
+              /"/g,
+              '""'
+            )}"`
         )
         .join(",")
     )
@@ -40,9 +51,11 @@ export const exportToCSV = (transactions, selectedMonth) => {
     }
   );
 
-  const url = URL.createObjectURL(blob);
+  const url =
+    URL.createObjectURL(blob);
 
-  const link = document.createElement("a");
+  const link =
+    document.createElement("a");
 
   link.href = url;
 
@@ -60,4 +73,6 @@ export const exportToCSV = (transactions, selectedMonth) => {
   document.body.removeChild(link);
 
   URL.revokeObjectURL(url);
+
+  return true;
 };

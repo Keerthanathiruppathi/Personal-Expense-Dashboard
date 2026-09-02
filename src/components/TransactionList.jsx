@@ -5,158 +5,312 @@ function TransactionList({
   onDeleteTransaction,
   onEditTransaction
 }) {
-  // Search and filter states
-  const [searchTerm, setSearchTerm] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [searchTerm, setSearchTerm] =
+    useState("");
 
-  // Filter transactions
-  const filteredTransactions = transactions.filter((transaction) => {
-    const description = transaction.description || "";
+  const [filterType, setFilterType] =
+    useState("all");
 
-    const matchesSearch = description
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+  // =============================
+  // Filter Transactions
+  // =============================
 
-    const matchesType =
-      typeFilter === "all" ||
-      transaction.type === typeFilter;
+  const filteredTransactions =
+    transactions.filter(
+      (transaction) => {
+        const matchesSearch =
+          transaction.description
+            ?.toLowerCase()
+            .includes(
+              searchTerm.toLowerCase()
+            ) ||
+          transaction.category
+            ?.toLowerCase()
+            .includes(
+              searchTerm.toLowerCase()
+            );
 
-    const matchesCategory =
-      categoryFilter === "all" ||
-      transaction.category === categoryFilter;
+        const matchesType =
+          filterType === "all" ||
+          transaction.type ===
+            filterType;
 
-    return (
-      matchesSearch &&
-      matchesType &&
-      matchesCategory
+        return (
+          matchesSearch &&
+          matchesType
+        );
+      }
     );
-  });
+
+  // =============================
+  // Format Date
+  // =============================
+
+  const formatDate = (date) => {
+    if (!date) return "-";
+
+    return new Date(
+      `${date}T00:00:00`
+    ).toLocaleDateString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }
+    );
+  };
+
+  // =============================
+  // UI
+  // =============================
 
   return (
-    <div className="transaction-list">
+    <section className="transactions-section">
 
-      <h2>Transaction History</h2>
+      <div className="transactions-header">
 
-      {/* Search and Filters */}
-      <div className="filters">
+        <div>
 
-        {/* Search */}
+          <h2>
+            🧾 Transaction History
+          </h2>
+
+          <p>
+            View and manage your transactions
+          </p>
+
+        </div>
+
+        <span className="transaction-count">
+          {filteredTransactions.length} records
+        </span>
+
+      </div>
+
+
+      {/* Search + Filter */}
+
+      <div className="transaction-controls">
+
         <input
           type="text"
           placeholder="🔍 Search transactions..."
           value={searchTerm}
           onChange={(event) =>
-            setSearchTerm(event.target.value)
+            setSearchTerm(
+              event.target.value
+            )
           }
         />
 
-        {/* Type Filter */}
         <select
-          value={typeFilter}
+          value={filterType}
           onChange={(event) =>
-            setTypeFilter(event.target.value)
+            setFilterType(
+              event.target.value
+            )
           }
         >
-          <option value="all">All Types</option>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-        </select>
 
-        {/* Category Filter */}
-        <select
-          value={categoryFilter}
-          onChange={(event) =>
-            setCategoryFilter(event.target.value)
-          }
-        >
-          <option value="all">All Categories</option>
-          <option value="Food">Food</option>
-          <option value="Transport">Transport</option>
-          <option value="Shopping">Shopping</option>
-          <option value="Bills">Bills</option>
-          <option value="Entertainment">Entertainment</option>
-          <option value="Salary">Salary</option>
-          <option value="Other">Other</option>
+          <option value="all">
+            All Types
+          </option>
+
+          <option value="income">
+            Income
+          </option>
+
+          <option value="expense">
+            Expense
+          </option>
+
         </select>
 
       </div>
 
-      {/* Transaction Table */}
+
+      {/* Empty State */}
+
       {filteredTransactions.length === 0 ? (
 
-        <p className="no-transactions">
-          No transactions found.
-        </p>
+        <div className="empty-state">
+
+          <div>
+            📭
+          </div>
+
+          <h3>
+            No transactions found
+          </h3>
+
+          <p>
+            Try changing your search or
+            add a new transaction.
+          </p>
+
+        </div>
 
       ) : (
 
-        <table>
+        <div className="transaction-table-wrapper">
 
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Description</th>
-              <th>Category</th>
-              <th>Type</th>
-              <th>Amount</th>
-              <th>Action</th>
-            </tr>
-          </thead>
+          <table className="transaction-table">
 
-          <tbody>
-            {filteredTransactions.map((transaction) => (
+            <thead>
 
-              <tr key={transaction.id}>
+              <tr>
 
-                <td>{transaction.date}</td>
+                <th>
+                  Date
+                </th>
 
-                <td>{transaction.description}</td>
+                <th>
+                  Description
+                </th>
 
-                <td>{transaction.category}</td>
+                <th>
+                  Category
+                </th>
 
-                <td>
-                  {transaction.type === "income"
-                    ? "Income"
-                    : "Expense"}
-                </td>
+                <th>
+                  Type
+                </th>
 
-                <td>
-                  ₹{transaction.amount.toLocaleString("en-IN")}
-                </td>
+                <th>
+                  Amount
+                </th>
 
-                <td>
-
-                  <button
-                    className="edit-button"
-                    onClick={() =>
-                      onEditTransaction(transaction)
-                    }
-                  >
-                    ✏️
-                  </button>
-
-                  <button
-                    className="delete-button"
-                    onClick={() =>
-                      onDeleteTransaction(transaction.id)
-                    }
-                  >
-                    🗑️
-                  </button>
-
-                </td>
+                <th>
+                  Actions
+                </th>
 
               </tr>
 
-            ))}
-          </tbody>
+            </thead>
 
-        </table>
+            <tbody>
+
+              {filteredTransactions.map(
+                (transaction) => (
+
+                  <tr
+                    key={
+                      transaction.id
+                    }
+                  >
+
+                    <td>
+                      {formatDate(
+                        transaction.date
+                      )}
+                    </td>
+
+                    <td>
+                      <strong>
+                        {
+                          transaction.description
+                        }
+                      </strong>
+                    </td>
+
+                    <td>
+                      <span className="category-badge">
+                        {
+                          transaction.category ||
+                          "Other"
+                        }
+                      </span>
+                    </td>
+
+                    <td>
+
+                      <span
+                        className={`type-badge ${
+                          transaction.type
+                        }`}
+                      >
+                        {transaction.type ===
+                        "income"
+                          ? "↑ Income"
+                          : "↓ Expense"}
+                      </span>
+
+                    </td>
+
+                    <td
+                      className={
+                        transaction.type ===
+                        "income"
+                          ? "amount-income"
+                          : "amount-expense"
+                      }
+                    >
+                      {transaction.type ===
+                      "income"
+                        ? "+"
+                        : "-"}
+                      ₹
+                      {Number(
+                        transaction.amount
+                      ).toLocaleString(
+                        "en-IN"
+                      )}
+                    </td>
+
+                    <td>
+
+                      <div className="action-buttons">
+
+                        <button
+                          className="edit-button"
+                          onClick={() =>
+                            onEditTransaction(
+                              transaction
+                            )
+                          }
+                        >
+                          ✏️
+                        </button>
+
+                        <button
+                          className="delete-button"
+                          onClick={() => {
+                            const confirmed =
+                              window.confirm(
+                                "Are you sure you want to delete this transaction?"
+                              );
+
+                            if (
+                              confirmed
+                            ) {
+                              onDeleteTransaction(
+                                transaction.id
+                              );
+                            }
+                          }}
+                        >
+                          🗑️
+                        </button>
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                )
+              )}
+
+            </tbody>
+
+          </table>
+
+        </div>
 
       )}
 
-    </div>
+    </section>
   );
 }
 

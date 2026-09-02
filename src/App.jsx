@@ -2,13 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import TransactionForm from "./components/TransactionForm";
 import TransactionList from "./components/TransactionList";
 import Charts from "./components/Charts";
+import Toast from "./components/Toast";
 import { exportToCSV } from "./utils/exportCSV";
 
 function App() {
-  // =============================
-  // Transactions
-  // =============================
-
   const [transactions, setTransactions] = useState(() => {
     const savedTransactions =
       localStorage.getItem("transactions");
@@ -18,23 +15,20 @@ function App() {
       : [];
   });
 
-  // =============================
-  // Editing Transaction
-  // =============================
-
   const [editingTransaction, setEditingTransaction] =
     useState(null);
-
-  // =============================
-  // Selected Month
-  // =============================
 
   const [selectedMonth, setSelectedMonth] =
     useState("all");
 
-  // =============================
-  // Save Transactions
-  // =============================
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedTheme =
+      localStorage.getItem("darkMode");
+
+    return savedTheme === "true";
+  });
+
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     localStorage.setItem(
@@ -43,68 +37,154 @@ function App() {
     );
   }, [transactions]);
 
-  // =============================
-  // Add Transaction
-  // =============================
+  useEffect(() => {
+    localStorage.setItem(
+      "darkMode",
+      darkMode
+    );
+
+    document.body.classList.toggle(
+      "dark-mode",
+      darkMode
+    );
+  }, [darkMode]);
+
+  useEffect(() => {
+    if (!toast) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setToast(null);
+    }, 3500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [toast]);
+
+  const showToast = (
+    type,
+    icon,
+    title,
+    message
+  ) => {
+    setToast({
+      type,
+      icon,
+      title,
+      message
+    });
+  };
+
+  const closeToast = () => {
+    setToast(null);
+  };
+
+  useEffect(() => {
+  const handleToastEvent = (event) => {
+    setToast(event.detail);
+  };
+
+  window.addEventListener(
+    "expense-dashboard-toast",
+    handleToastEvent
+  );
+
+  return () => {
+    window.removeEventListener(
+      "expense-dashboard-toast",
+      handleToastEvent
+    );
+  };
+}, []);
 
   const addTransaction = (transaction) => {
     setTransactions((previousTransactions) => [
       ...previousTransactions,
       transaction
     ]);
-  };
 
-  // =============================
-  // Delete Transaction
-  // =============================
+    showToast(
+      "success",
+      "✅",
+      "Transaction Added",
+      "Your transaction was added successfully."
+    );
+  };
 
   const deleteTransaction = (id) => {
     setTransactions((previousTransactions) =>
       previousTransactions.filter(
-        (transaction) => transaction.id !== id
+        (transaction) =>
+          transaction.id !== id
       )
     );
-  };
 
-  // =============================
-  // Edit Transaction
-  // =============================
+    showToast(
+      "danger",
+      "🗑️",
+      "Transaction Deleted",
+      "The transaction was deleted successfully."
+    );
+  };
 
   const editTransaction = (transaction) => {
     setEditingTransaction(transaction);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
   };
 
-  // =============================
-  // Update Transaction
-  // =============================
-
-  const updateTransaction = (updatedTransaction) => {
-    setTransactions((previousTransactions) =>
-      previousTransactions.map((transaction) =>
-        transaction.id === updatedTransaction.id
-          ? updatedTransaction
-          : transaction
-      )
+  const updateTransaction = (
+    updatedTransaction
+  ) => {
+    setTransactions(
+      (previousTransactions) =>
+        previousTransactions.map(
+          (transaction) =>
+            transaction.id ===
+            updatedTransaction.id
+              ? updatedTransaction
+              : transaction
+        )
     );
 
     setEditingTransaction(null);
+
+    showToast(
+      "info",
+      "✏️",
+      "Transaction Updated",
+      "Your transaction was updated successfully."
+    );
   };
 
-  // =============================
-  // Available Months
-  // =============================
+  const cancelEdit = () => {
+    setEditingTransaction(null);
+
+    showToast(
+      "info",
+      "↩️",
+      "Edit Cancelled",
+      "No changes were made to the transaction."
+    );
+  };
 
   const availableMonths = useMemo(() => {
     const months = transactions
-      .map((transaction) => transaction.date?.slice(0, 7))
+      .map(
+        (transaction) =>
+          transaction.date?.slice(0, 7)
+      )
       .filter(Boolean);
 
-    return [...new Set(months)].sort().reverse();
+    return [
+      ...new Set(months)
+    ].sort().reverse();
   }, [transactions]);
-
-  // =============================
-  // Format Month
-  // =============================
 
   const formatMonth = (monthValue) => {
     const [year, month] =
@@ -124,10 +204,6 @@ function App() {
     );
   };
 
-  // =============================
-  // Filter Transactions
-  // =============================
-
   const filteredTransactions =
     selectedMonth === "all"
       ? transactions
@@ -137,10 +213,6 @@ function App() {
               selectedMonth
             )
         );
-
-  // =============================
-  // Total Income
-  // =============================
 
   const totalIncome =
     filteredTransactions
@@ -155,10 +227,6 @@ function App() {
         0
       );
 
-  // =============================
-  // Total Expenses
-  // =============================
-
   const totalExpenses =
     filteredTransactions
       .filter(
@@ -172,16 +240,8 @@ function App() {
         0
       );
 
-  // =============================
-  // Balance
-  // =============================
-
   const balance =
     totalIncome - totalExpenses;
-
-  // =============================
-  // Expense Transactions
-  // =============================
 
   const expenseTransactions =
     filteredTransactions.filter(
@@ -189,29 +249,17 @@ function App() {
         transaction.type === "expense"
     );
 
-  // =============================
-  // Income Transactions
-  // =============================
-
   const incomeTransactions =
     filteredTransactions.filter(
       (transaction) =>
         transaction.type === "income"
     );
 
-  // =============================
-  // Average Expense
-  // =============================
-
   const averageExpense =
     expenseTransactions.length > 0
       ? totalExpenses /
         expenseTransactions.length
       : 0;
-
-  // =============================
-  // Highest Expense
-  // =============================
 
   const highestExpense =
     expenseTransactions.length > 0
@@ -222,10 +270,6 @@ function App() {
           )
         )
       : 0;
-
-  // =============================
-  // Category Totals
-  // =============================
 
   const categoryTotals = {};
 
@@ -241,38 +285,33 @@ function App() {
     }
   );
 
-  // =============================
-  // Top Category
-  // =============================
-
   let topCategory = "No data";
   let topCategoryAmount = 0;
 
-  Object.entries(categoryTotals).forEach(
+  Object.entries(
+    categoryTotals
+  ).forEach(
     ([category, amount]) => {
-      if (amount > topCategoryAmount) {
+      if (
+        amount >
+        topCategoryAmount
+      ) {
         topCategory = category;
         topCategoryAmount = amount;
       }
     }
   );
 
-  // =============================
-  // Savings Rate
-  // =============================
-
   const savingsRate =
     totalIncome > 0
       ? (balance / totalIncome) * 100
       : 0;
 
-  // =============================
-  // Smart Insights
-  // =============================
-
   const smartInsights = [];
 
-  if (filteredTransactions.length === 0) {
+  if (
+    filteredTransactions.length === 0
+  ) {
     smartInsights.push({
       type: "info",
       icon: "📊",
@@ -367,45 +406,70 @@ function App() {
     });
   }
 
-  // =============================
-  // Export CSV
-  // =============================
-
   const handleExportCSV = () => {
-    exportToCSV(
-      filteredTransactions,
-      selectedMonth
-    );
+    const exported =
+      exportToCSV(
+        filteredTransactions,
+        selectedMonth
+      );
+
+    if (exported) {
+      showToast(
+        "success",
+        "📥",
+        "CSV Exported",
+        "Your transaction data was exported successfully."
+      );
+    } else {
+      showToast(
+        "warning",
+        "⚠️",
+        "Nothing to Export",
+        "There are no transactions available for export."
+      );
+    }
   };
 
-  // =============================
-  // UI
-  // =============================
-
   return (
-    <div className="app">
-
-      {/* Header */}
+    <div
+      className={`app ${
+        darkMode ? "dark-theme" : ""
+      }`}
+    >
+      <Toast
+        toast={toast}
+        onClose={closeToast}
+      />
 
       <header className="header">
+        <div>
+          <h1>
+            Personal Expense Dashboard
+          </h1>
 
-        <h1>
-          Personal Expense Dashboard
-        </h1>
+          <p>
+            Manage your finances in one place
+          </p>
+        </div>
 
-        <p>
-          Manage your finances in one place
-        </p>
-
+        <button
+          className="theme-toggle"
+          onClick={() =>
+            setDarkMode(
+              (previousMode) =>
+                !previousMode
+            )
+          }
+          aria-label="Toggle dark mode"
+        >
+          {darkMode
+            ? "☀️ Light Mode"
+            : "🌙 Dark Mode"}
+        </button>
       </header>
 
-
-      {/* Month Filter + Export */}
-
       <div className="month-filter">
-
         <div>
-
           <label htmlFor="month">
             📅 Select Month
           </label>
@@ -419,7 +483,6 @@ function App() {
               )
             }
           >
-
             <option value="all">
               All Months
             </option>
@@ -434,9 +497,7 @@ function App() {
                 </option>
               )
             )}
-
           </select>
-
         </div>
 
         <button
@@ -445,25 +506,14 @@ function App() {
         >
           📥 Export CSV
         </button>
-
       </div>
 
-
-      {/* Summary */}
-
       <section className="summary">
-
         <div className="card balance-card">
-
-          <div className="card-icon">
-            💰
-          </div>
+          <div className="card-icon">💰</div>
 
           <div className="card-content">
-
-            <h3>
-              Total Balance
-            </h3>
+            <h3>Total Balance</h3>
 
             <p
               className={
@@ -483,23 +533,14 @@ function App() {
                 ? "Your balance is positive"
                 : "Your expenses are higher than income"}
             </span>
-
           </div>
-
         </div>
 
-
         <div className="card income-card">
-
-          <div className="card-icon">
-            📈
-          </div>
+          <div className="card-icon">📈</div>
 
           <div className="card-content">
-
-            <h3>
-              Total Income
-            </h3>
+            <h3>Total Income</h3>
 
             <p className="positive">
               ₹
@@ -508,26 +549,15 @@ function App() {
               )}
             </p>
 
-            <span>
-              Money received
-            </span>
-
+            <span>Money received</span>
           </div>
-
         </div>
 
-
         <div className="card expense-card">
-
-          <div className="card-icon">
-            📉
-          </div>
+          <div className="card-icon">📉</div>
 
           <div className="card-content">
-
-            <h3>
-              Total Expenses
-            </h3>
+            <h3>Total Expenses</h3>
 
             <p className="negative">
               ₹
@@ -536,71 +566,40 @@ function App() {
               )}
             </p>
 
-            <span>
-              Money spent
-            </span>
-
+            <span>Money spent</span>
           </div>
-
         </div>
 
-
         <div className="card transaction-card">
-
-          <div className="card-icon">
-            🧾
-          </div>
+          <div className="card-icon">🧾</div>
 
           <div className="card-content">
-
-            <h3>
-              Transactions
-            </h3>
+            <h3>Transactions</h3>
 
             <p>
               {filteredTransactions.length}
             </p>
 
-            <span>
-              Total records
-            </span>
-
+            <span>Total records</span>
           </div>
-
         </div>
-
       </section>
 
-
-      {/* Financial Analytics */}
-
       <section className="analytics-section">
-
         <div className="analytics-header">
-
-          <h2>
-            📊 Financial Analytics
-          </h2>
+          <h2>📊 Financial Analytics</h2>
 
           <p>
             Get insights into your spending habits
           </p>
-
         </div>
 
         <div className="analytics-grid">
-
           <div className="analytics-card">
-
-            <div className="analytics-icon">
-              💵
-            </div>
+            <div className="analytics-icon">💵</div>
 
             <div>
-
-              <h3>
-                Average Expense
-              </h3>
+              <h3>Average Expense</h3>
 
               <p>
                 ₹
@@ -615,23 +614,14 @@ function App() {
               <span>
                 Per expense transaction
               </span>
-
             </div>
-
           </div>
 
-
           <div className="analytics-card">
-
-            <div className="analytics-icon">
-              🔥
-            </div>
+            <div className="analytics-icon">🔥</div>
 
             <div>
-
-              <h3>
-                Highest Expense
-              </h3>
+              <h3>Highest Expense</h3>
 
               <p>
                 ₹
@@ -643,27 +633,16 @@ function App() {
               <span>
                 Largest single expense
               </span>
-
             </div>
-
           </div>
 
-
           <div className="analytics-card">
-
-            <div className="analytics-icon">
-              🏆
-            </div>
+            <div className="analytics-icon">🏆</div>
 
             <div>
+              <h3>Top Category</h3>
 
-              <h3>
-                Top Category
-              </h3>
-
-              <p>
-                {topCategory}
-              </p>
+              <p>{topCategory}</p>
 
               <span>
                 ₹
@@ -672,23 +651,14 @@ function App() {
                 )}{" "}
                 spent
               </span>
-
             </div>
-
           </div>
 
-
           <div className="analytics-card">
-
-            <div className="analytics-icon">
-              💚
-            </div>
+            <div className="analytics-icon">💚</div>
 
             <div>
-
-              <h3>
-                Savings Rate
-              </h3>
+              <h3>Savings Rate</h3>
 
               <p>
                 {savingsRate.toFixed(1)}%
@@ -697,23 +667,14 @@ function App() {
               <span>
                 Income remaining
               </span>
-
             </div>
-
           </div>
 
-
           <div className="analytics-card">
-
-            <div className="analytics-icon">
-              📈
-            </div>
+            <div className="analytics-icon">📈</div>
 
             <div>
-
-              <h3>
-                Income Transactions
-              </h3>
+              <h3>Income Transactions</h3>
 
               <p>
                 {incomeTransactions.length}
@@ -722,23 +683,14 @@ function App() {
               <span>
                 Money received records
               </span>
-
             </div>
-
           </div>
 
-
           <div className="analytics-card">
-
-            <div className="analytics-icon">
-              📉
-            </div>
+            <div className="analytics-icon">📉</div>
 
             <div>
-
-              <h3>
-                Expense Transactions
-              </h3>
+              <h3>Expense Transactions</h3>
 
               <p>
                 {expenseTransactions.length}
@@ -747,47 +699,32 @@ function App() {
               <span>
                 Money spent records
               </span>
-
             </div>
-
           </div>
-
         </div>
-
       </section>
 
-
-      {/* Smart Insights */}
-
       <section className="insights-section">
-
         <div className="insights-header">
-
-          <h2>
-            🧠 Smart Spending Insights
-          </h2>
+          <h2>🧠 Smart Spending Insights</h2>
 
           <p>
             Personalized insights based on your financial activity
           </p>
-
         </div>
 
         <div className="insights-grid">
-
           {smartInsights.map(
             (insight, index) => (
               <div
                 className={`insight-card ${insight.type}`}
                 key={index}
               >
-
                 <div className="insight-icon">
                   {insight.icon}
                 </div>
 
                 <div className="insight-content">
-
                   <h3>
                     {insight.title}
                   </h3>
@@ -795,30 +732,23 @@ function App() {
                   <p>
                     {insight.message}
                   </p>
-
                 </div>
-
               </div>
             )
           )}
-
         </div>
-
       </section>
-
-
-      {/* Transaction Form */}
 
       <TransactionForm
         onAddTransaction={addTransaction}
-        editingTransaction={editingTransaction}
+        editingTransaction={
+          editingTransaction
+        }
         onUpdateTransaction={
           updateTransaction
         }
+        onCancelEdit={cancelEdit}
       />
-
-
-      {/* Transaction History */}
 
       <TransactionList
         transactions={
@@ -832,15 +762,11 @@ function App() {
         }
       />
 
-
-      {/* Charts */}
-
       <Charts
         transactions={
           filteredTransactions
         }
       />
-
     </div>
   );
 }
