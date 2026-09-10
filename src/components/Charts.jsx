@@ -108,13 +108,13 @@ function Charts({ transactions }) {
   // -----------------------------
 
   const COLORS = [
-    "#8884d8",
-    "#82ca9d",
-    "#ffc658",
-    "#ff8042",
-    "#0088FE",
-    "#00C49F",
-    "#FFBB28"
+    "#8a5708",
+    "#a16207",
+    "#b7791f",
+    "#c58d3d",
+    "#d2a45f",
+    "#ddb77f",
+    "#e8cda5"
   ];
 
 
@@ -145,12 +145,12 @@ function Charts({ transactions }) {
 
             <Bar
               dataKey="Income"
-              fill="#22c55e"
+              fill="#3d3833"
             />
 
             <Bar
               dataKey="Expenses"
-              fill="#ef4444"
+              fill="#a16207"
             />
 
           </BarChart>
@@ -263,7 +263,7 @@ function Charts({ transactions }) {
               <Line
                 type="monotone"
                 dataKey="expenses"
-                stroke="#ef4444"
+                stroke="#a16207"
                 strokeWidth={3}
                 name="Expenses"
                 dot={{ r: 5 }}

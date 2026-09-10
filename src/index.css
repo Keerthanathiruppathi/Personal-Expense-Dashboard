@@ -13,13 +13,7 @@ html {
 body {
   margin: 0;
 
-  font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
 
   background: #f4f7fb;
 
@@ -1786,6 +1780,145 @@ body.dark-mode .toast-close:hover {
 }
 
 /* =================================
+   DARK DASHBOARD THEME
+================================= */
+
+body.dark-mode .app-shell {
+  --theme-ink: #f4eee6;
+  --theme-primary: #e0a84c;
+  --theme-primary-dark: #f0c579;
+  --theme-primary-soft: #443722;
+  --theme-surface: #24211e;
+  --theme-muted: #c2b8ab;
+  --theme-border: #49423a;
+  --theme-background: #171513;
+  background: var(--theme-background);
+  color: var(--theme-ink);
+}
+
+body.dark-mode .app-shell .header,
+body.dark-mode .app-shell .month-filter,
+body.dark-mode .app-shell .card,
+body.dark-mode .app-shell .budget-section,
+body.dark-mode .app-shell .analytics-card,
+body.dark-mode .app-shell .insight-card,
+body.dark-mode .app-shell .form-section,
+body.dark-mode .app-shell .transactions-section,
+body.dark-mode .app-shell .chart-card {
+  border-color: var(--theme-border);
+  background: var(--theme-surface);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+body.dark-mode .app-shell .header {
+  background: linear-gradient(135deg, #2a2723, #201d1a);
+}
+
+body.dark-mode .app-shell h1,
+body.dark-mode .app-shell h2,
+body.dark-mode .app-shell h3,
+body.dark-mode .app-shell strong,
+body.dark-mode .app-shell .card-content p,
+body.dark-mode .app-shell .analytics-card p,
+body.dark-mode .app-shell .chart-card {
+  color: var(--theme-ink);
+}
+
+body.dark-mode .app-shell .header p,
+body.dark-mode .app-shell .analytics-header p,
+body.dark-mode .app-shell .insights-header p,
+body.dark-mode .app-shell .form-header p,
+body.dark-mode .app-shell .transactions-header p,
+body.dark-mode .app-shell .card-content h3,
+body.dark-mode .app-shell .analytics-card h3,
+body.dark-mode .app-shell .analytics-card span,
+body.dark-mode .app-shell .insight-content p,
+body.dark-mode .app-shell .empty-state,
+body.dark-mode .app-shell .budget-header p,
+body.dark-mode .app-shell .budget-stat span {
+  color: var(--theme-muted);
+}
+
+body.dark-mode .app-shell .month-filter select,
+body.dark-mode .app-shell .form-group input,
+body.dark-mode .app-shell .form-group select,
+body.dark-mode .app-shell .transaction-controls input,
+body.dark-mode .app-shell .transaction-controls select,
+body.dark-mode .app-shell .budget-input-wrapper {
+  border-color: var(--theme-border);
+  color: var(--theme-ink);
+  background: #1b1917;
+}
+
+body.dark-mode .app-shell .month-filter select:focus,
+body.dark-mode .app-shell .form-group input:focus,
+body.dark-mode .app-shell .form-group select:focus,
+body.dark-mode .app-shell .transaction-controls input:focus,
+body.dark-mode .app-shell .transaction-controls select:focus,
+body.dark-mode .app-shell .budget-input-wrapper:focus-within {
+  border-color: var(--theme-primary);
+  box-shadow: 0 0 0 3px rgba(224, 168, 76, 0.16);
+}
+
+body.dark-mode .app-shell .card-icon,
+body.dark-mode .app-shell .analytics-icon,
+body.dark-mode .app-shell .budget-stat,
+body.dark-mode .app-shell .transaction-count,
+body.dark-mode .app-shell .category-badge,
+body.dark-mode .app-shell .edit-button,
+body.dark-mode .app-shell .delete-button,
+body.dark-mode .app-shell .budget-period {
+  color: var(--theme-primary-dark);
+  background: var(--theme-primary-soft);
+}
+
+body.dark-mode .app-shell .positive,
+body.dark-mode .app-shell .negative,
+body.dark-mode .app-shell .budget-spent,
+body.dark-mode .app-shell .budget-remaining,
+body.dark-mode .app-shell .budget-over,
+body.dark-mode .app-shell .budget-status.safe,
+body.dark-mode .app-shell .budget-status.warning,
+body.dark-mode .app-shell .budget-status.danger,
+body.dark-mode .app-shell .budget-status.empty {
+  color: var(--theme-primary);
+}
+
+body.dark-mode .app-shell .transaction-table th {
+  color: var(--theme-muted);
+  background: #1b1917;
+}
+
+body.dark-mode .app-shell .transaction-table td {
+  color: var(--theme-ink);
+  border-bottom-color: var(--theme-border);
+}
+
+body.dark-mode .app-shell .transaction-table tbody tr:hover {
+  background: #2a2723;
+}
+
+body.dark-mode .app-shell .cancel-button {
+  color: var(--theme-ink);
+  background: #3a3530;
+}
+
+body.dark-mode .app-shell .chart-card h2,
+body.dark-mode .app-shell .chart-card .recharts-text {
+  fill: var(--theme-ink);
+  color: var(--theme-ink);
+}
+
+body.dark-mode .app-shell .chart-card .recharts-cartesian-grid line {
+  stroke: #49423a;
+}
+
+body.dark-mode .app-shell .toast {
+  color: var(--theme-ink);
+  background: var(--theme-surface);
+}
+
+/* =================================
    AUTHENTICATION
 ================================= */
 
@@ -1992,6 +2125,210 @@ body.dark-mode .toast-close:hover {
   color: #2563eb;
   background: transparent;
   font-weight: 700;
+}
+
+/* =================================
+   DASHBOARD THEME
+================================= */
+
+:root {
+  --theme-ink: #252321;
+  --theme-primary: #a16207;
+  --theme-primary-dark: #3d3833;
+  --theme-primary-soft: #f5ead5;
+  --theme-surface: #fffdfa;
+  --theme-muted: #756e67;
+  --theme-border: #e6ded3;
+  --theme-background: #f5f1eb;
+}
+
+.app-shell {
+  color: var(--theme-ink);
+  background: var(--theme-background);
+}
+
+.app-shell .header,
+.app-shell .month-filter,
+.app-shell .card,
+.app-shell .budget-section,
+.app-shell .analytics-card,
+.app-shell .insight-card,
+.app-shell .form-section,
+.app-shell .transactions-section,
+.app-shell .chart-card {
+  border-color: var(--theme-border);
+  background: var(--theme-surface);
+  box-shadow: 0 8px 24px rgba(61, 56, 51, 0.08);
+}
+
+.app-shell .header {
+  background: linear-gradient(135deg, #fffdfa, #f8f3eb);
+}
+
+.app-shell h1,
+.app-shell h2,
+.app-shell h3,
+.app-shell strong,
+.app-shell .card-content p,
+.app-shell .analytics-card p {
+  color: var(--theme-ink);
+}
+
+.app-shell .header p,
+.app-shell .analytics-header p,
+.app-shell .insights-header p,
+.app-shell .form-header p,
+.app-shell .transactions-header p,
+.app-shell .card-content h3,
+.app-shell .analytics-card h3,
+.app-shell .analytics-card span,
+.app-shell .insight-content p,
+.app-shell .empty-state,
+.app-shell .budget-header p {
+  color: var(--theme-muted);
+}
+
+.app-shell .theme-toggle,
+.app-shell .submit-button,
+.app-shell .pdf-button,
+.app-shell .auth-submit {
+  background: var(--theme-primary);
+}
+
+.app-shell .theme-toggle:hover,
+.app-shell .submit-button:hover,
+.app-shell .pdf-button:hover,
+.app-shell .auth-submit:hover {
+  box-shadow: 0 8px 18px rgba(161, 98, 7, 0.22);
+}
+
+.app-shell .export-button {
+  background: var(--theme-primary-dark);
+}
+
+.app-shell .positive,
+.app-shell .negative,
+.app-shell .budget-spent,
+.app-shell .budget-remaining,
+.app-shell .budget-over {
+  color: var(--theme-primary);
+}
+
+.app-shell .card-icon,
+.app-shell .analytics-icon,
+.app-shell .budget-stat,
+.app-shell .transaction-count,
+.app-shell .category-badge,
+.app-shell .edit-button,
+.app-shell .delete-button,
+.app-shell .budget-period {
+  color: var(--theme-primary-dark);
+  background: var(--theme-primary-soft);
+}
+
+.app-shell .month-filter select,
+.app-shell .form-group input,
+.app-shell .form-group select,
+.app-shell .transaction-controls input,
+.app-shell .transaction-controls select,
+.app-shell .budget-input-wrapper {
+  border-color: var(--theme-border);
+  color: var(--theme-ink);
+  background: #fffdfa;
+}
+
+.app-shell .month-filter select:focus,
+.app-shell .form-group input:focus,
+.app-shell .form-group select:focus,
+.app-shell .transaction-controls input:focus,
+.app-shell .transaction-controls select:focus,
+.app-shell .budget-input-wrapper:focus-within {
+  border-color: var(--theme-primary);
+  box-shadow: 0 0 0 3px rgba(161, 98, 7, 0.14);
+}
+
+.app-shell .budget-progress-fill.safe,
+.app-shell .budget-progress-fill.warning,
+.app-shell .budget-progress-fill.danger,
+.app-shell .budget-progress-fill.empty {
+  background: var(--theme-primary);
+}
+
+.app-shell .insight-card.success,
+.app-shell .insight-card.warning,
+.app-shell .insight-card.info,
+.app-shell .insight-card.category {
+  border-left-color: var(--theme-primary);
+}
+
+.app-shell .budget-status.safe,
+.app-shell .budget-status.warning,
+.app-shell .budget-status.danger,
+.app-shell .budget-status.empty {
+  color: var(--theme-primary);
+}
+
+.app-shell .budget-progress-fill.safe,
+.app-shell .budget-progress-fill.warning,
+.app-shell .budget-progress-fill.danger,
+.app-shell .budget-progress-fill.empty {
+  background: var(--theme-primary);
+}
+
+.app-shell .type-badge.income,
+.app-shell .type-badge.expense {
+  color: var(--theme-primary-dark);
+  background: var(--theme-primary-soft);
+}
+
+.app-shell .sidebar {
+  background: var(--theme-primary-dark);
+}
+
+.app-shell .sidebar-link:hover,
+.app-shell .sidebar-link.active,
+.app-shell .logout-button:hover {
+  background: #514941;
+}
+
+.app-shell .sidebar-link.active span {
+  color: #e8bd70;
+}
+
+.app-shell .sidebar-brand div,
+.app-shell .sidebar-user div {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.app-shell .sidebar-brand strong,
+.app-shell .sidebar-brand div span,
+.app-shell .sidebar-user strong,
+.app-shell .sidebar-user div span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-shell .sidebar-link {
+  white-space: nowrap;
+}
+
+.app-shell .sidebar-user {
+  min-width: 0;
+}
+
+.app-shell .sidebar-user .user-avatar {
+  background: #e8bd70;
+}
+
+.app-shell .chart-card {
+  color: var(--theme-ink);
+}
+
+.app-shell .chart-card h2 {
+  color: var(--theme-ink);
 }
 
 /* =================================
