@@ -75,7 +75,7 @@ The project was developed using **React** with **Vite**, following a component-b
 | Technology    | Purpose                           |
 | ------------- | --------------------------------- |
 | ⚛️ React      | Frontend UI development           |
-| ⚡ Vite        | Development server and build tool |
+| ⚡ Vite       | Development server and build tool|
 | 🟨 JavaScript | Application logic                 |
 | 🎨 CSS        | Styling and responsive design     |
 | 📦 npm        | Package management                |
@@ -227,19 +227,6 @@ This dashboard can be useful for:
 
 ---
 
-
-
-## 📸 Screenshots
-
-### Dashboard
-
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/d12d66ce-3189-4934-99ab-09240e2e2c5e" /><br>
-<img width="1920" height="1080" alt="Screenshot (199)" src="https://github.com/user-attachments/assets/0ff30315-6ea5-4f8a-956e-82984c0167b8" /><br>
-
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/fa15ee5e-7106-4de6-a01d-1cb2abfa4bc2" />
-
-
----
 
 ## 🌐 Deployment
 
