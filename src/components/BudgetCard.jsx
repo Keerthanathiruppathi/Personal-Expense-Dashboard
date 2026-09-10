@@ -3,14 +3,12 @@ import { useEffect, useState } from "react";
 function BudgetCard({
   selectedMonth,
   totalExpenses,
-  onBudgetChange
+  onBudgetChange,
+  userEmail
 }) {
   const [budget, setBudget] = useState("");
 
-  const storageKey =
-    selectedMonth === "all"
-      ? "monthlyBudget-all"
-      : `monthlyBudget-${selectedMonth}`;
+  const storageKey = `monthlyBudget-${userEmail}-${selectedMonth}`;
 
   useEffect(() => {
     const savedBudget =

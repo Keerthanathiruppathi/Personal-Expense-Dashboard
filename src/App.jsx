@@ -4,13 +4,23 @@ import TransactionList from "./components/TransactionList";
 import Charts from "./components/Charts";
 import Toast from "./components/Toast";
 import BudgetCard from "./components/BudgetCard";
+import AuthPage from "./components/AuthPage";
+import Sidebar from "./components/Sidebar";
 import { exportToCSV } from "./utils/exportCSV";
 import { exportToPDF } from "./utils/exportPDF";
 
 function App() {
+  const [currentUser, setCurrentUser] = useState(() => {
+    const savedSession = localStorage.getItem("expense-dashboard-session");
+    return savedSession ? JSON.parse(savedSession) : null;
+  });
+
   const [transactions, setTransactions] = useState(() => {
-    const savedTransactions =
-      localStorage.getItem("transactions");
+    const savedSession = localStorage.getItem("expense-dashboard-session");
+    const session = savedSession ? JSON.parse(savedSession) : null;
+    const savedTransactions = session
+      ? localStorage.getItem(`transactions-${session.email}`)
+      : null;
 
     return savedTransactions
       ? JSON.parse(savedTransactions)
@@ -36,11 +46,13 @@ function App() {
     useState(0);
 
   useEffect(() => {
-    localStorage.setItem(
-      "transactions",
-      JSON.stringify(transactions)
-    );
-  }, [transactions]);
+    if (currentUser) {
+      localStorage.setItem(
+        `transactions-${currentUser.email}`,
+        JSON.stringify(transactions)
+      );
+    }
+  }, [transactions, currentUser]);
 
   useEffect(() => {
     localStorage.setItem(
@@ -69,10 +81,13 @@ function App() {
   }, [toast]);
 
   useEffect(() => {
-    const storageKey =
-      selectedMonth === "all"
-        ? "monthlyBudget-all"
-        : `monthlyBudget-${selectedMonth}`;
+    const storageKey = currentUser
+      ? `monthlyBudget-${currentUser.email}-${selectedMonth}`
+      : null;
+
+    if (!storageKey) {
+      return;
+    }
 
     const savedBudget =
       localStorage.getItem(storageKey);
@@ -82,7 +97,7 @@ function App() {
         ? Number(savedBudget)
         : 0
     );
-  }, [selectedMonth]);
+  }, [selectedMonth, currentUser]);
 
   useEffect(() => {
     const handleToastEvent = (event) => {
@@ -599,14 +614,35 @@ function App() {
     }
   };
 
+  const handleAuthenticated = (user) => {
+    localStorage.setItem(
+      "expense-dashboard-session",
+      JSON.stringify(user)
+    );
+    const savedTransactions = localStorage.getItem(
+      `transactions-${user.email}`
+    );
+    setTransactions(
+      savedTransactions ? JSON.parse(savedTransactions) : []
+    );
+    setSelectedMonth("all");
+    setCurrentUser(user);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("expense-dashboard-session");
+    setTransactions([]);
+    setCurrentUser(null);
+  };
+
+  if (!currentUser) {
+    return <AuthPage onAuthenticated={handleAuthenticated} />;
+  }
+
   return (
-    <div
-      className={`app ${
-        darkMode
-          ? "dark-theme"
-          : ""
-      }`}
-    >
+    <div className={`app-shell ${darkMode ? "dark-theme" : ""}`}>
+      <Sidebar user={currentUser} onLogout={handleLogout} />
+      <main className="app">
       <Toast
         toast={toast}
         onClose={
@@ -614,7 +650,7 @@ function App() {
         }
       />
 
-      <header className="header">
+      <header className="header" id="overview">
         <div>
           <h1>
             Personal Expense Dashboard
@@ -810,9 +846,10 @@ function App() {
         onBudgetChange={
           handleBudgetChange
         }
+        userEmail={currentUser.email}
       />
 
-      <section className="analytics-section">
+      <section className="analytics-section" id="analytics">
         <div className="analytics-header">
           <h2>
             📊 Financial Analytics
@@ -1012,6 +1049,7 @@ function App() {
         </div>
       </section>
 
+      <div id="add-transaction">
       <TransactionForm
         onAddTransaction={
           addTransaction
@@ -1026,7 +1064,9 @@ function App() {
           cancelEdit
         }
       />
+      </div>
 
+      <div id="transactions">
       <TransactionList
         transactions={
           filteredTransactions
@@ -1038,12 +1078,14 @@ function App() {
           editTransaction
         }
       />
+      </div>
 
       <Charts
         transactions={
           filteredTransactions
         }
       />
+      </main>
     </div>
   );
 }
