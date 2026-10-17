@@ -244,7 +244,7 @@ The application is deployed using **Vercel**.
 
 ## 👩‍💻 Author
 
-### Keerthana Thiruppathi
+Keerthana Thiruppathi
 
 ### GitHub
 
